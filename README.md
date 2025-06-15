@@ -1,4 +1,4 @@
-# Focused Menu
+# Smart Overlay Menu
 
 A Flutter package that provides a generic component for displaying custom overlays on long press (or tap) with automatic repositioning and haptic feedback.
 
@@ -9,7 +9,7 @@ A Flutter package that provides a generic component for displaying custom overla
 
 ## Demonstration
 
-Here's how the focused menu looks in action, as implemented in [Dragonfly](https://dfly.app), a native macOS/iOS client for Bluesky:
+Here's how the smart overlay menu looks in action, as implemented in [Dragonfly](https://dfly.app), a native macOS/iOS client for Bluesky.
 
 <img src="https://raw.githubusercontent.com/sgruhier/smart_overlay_menu/refs/heads/main/assets/smart_overlay_menu.gif" width="600" height="600">
 
@@ -45,7 +45,7 @@ flutter pub get
 ```dart
 import 'package:smart_overlay_menu/smart_overlay_menu.dart';
 
-FocusedOverlayHolder(
+SmartOverlayMenu(
   topWidget: Container(
     padding: EdgeInsets.all(16),
     color: Colors.blue,
@@ -76,7 +76,7 @@ The component automatically detects when widgets overflow the screen and reposit
 When the main widget (child) is too large to fit on screen between top and bottom widgets, you can enable automatic scaling:
 
 ```dart
-FocusedOverlayHolder(
+SmartOverlayMenu(
   scaleDownWhenTooLarge: true, // Enable automatic scaling
   topWidget: Container(
     padding: EdgeInsets.all(16),
@@ -118,7 +118,7 @@ Control the horizontal alignment of top and bottom widgets relative to the main 
 
 ```dart
 // Left aligned (default)
-FocusedOverlayHolder(
+SmartOverlayMenu(
   topWidgetAlignment: Alignment.centerLeft,
   bottomWidgetAlignment: Alignment.centerLeft,
   topWidget: Text('Left aligned'),
@@ -127,7 +127,7 @@ FocusedOverlayHolder(
 )
 
 // Right aligned
-FocusedOverlayHolder(
+SmartOverlayMenu(
   topWidgetAlignment: Alignment.centerRight,
   bottomWidgetAlignment: Alignment.centerRight,
   topWidget: Text('Right aligned'),
@@ -136,7 +136,7 @@ FocusedOverlayHolder(
 )
 
 // Center aligned
-FocusedOverlayHolder(
+SmartOverlayMenu(
   topWidgetAlignment: Alignment.center,
   bottomWidgetAlignment: Alignment.center,
   topWidget: Text('Center aligned'),
@@ -145,7 +145,7 @@ FocusedOverlayHolder(
 )
 
 // Mixed alignment
-FocusedOverlayHolder(
+SmartOverlayMenu(
   topWidgetAlignment: Alignment.centerLeft,
   bottomWidgetAlignment: Alignment.centerRight,
   topWidget: Text('Left top'),
@@ -160,13 +160,13 @@ Provide visual feedback when users long press (or tap) widgets with customizable
 
 ```dart
 // Default press feedback (0.9 scale, 200ms)
-FocusedOverlayHolder(
+SmartOverlayMenu(
   bottomWidget: Text('Menu item'),
   child: Text('Long press me'),
 )
 
 // Custom press feedback
-FocusedOverlayHolder(
+SmartOverlayMenu(
   pressFeedbackScale: 0.8,           // Scale down to 80%
   pressFeedbackDuration: Duration(milliseconds: 300), // 300ms animation
   bottomWidget: Text('Menu item'),
@@ -174,7 +174,7 @@ FocusedOverlayHolder(
 )
 
 // Subtle press feedback
-FocusedOverlayHolder(
+SmartOverlayMenu(
   pressFeedbackScale: 0.95,          // Scale down to 95%
   pressFeedbackDuration: Duration(milliseconds: 150), // 150ms animation
   bottomWidget: Text('Menu item'),
@@ -182,7 +182,7 @@ FocusedOverlayHolder(
 )
 
 // Custom reverse animation (scale up in overlay)
-FocusedOverlayHolder(
+SmartOverlayMenu(
   pressFeedbackScale: 0.85,          // Scale down to 85%
   pressFeedbackDuration: Duration(milliseconds: 500), // Slow scale down
   pressFeedbackReverseDuration: Duration(milliseconds: 800), // Slow scale up
@@ -204,7 +204,7 @@ The press feedback animation:
 Customize the animation curves for different parts of the overlay system for fine-tuned control over the animation feel:
 
 ```dart
-FocusedOverlayHolder(
+SmartOverlayMenu(
   // Custom repositioning animation curve
   repositionAnimationCurve: Curves.easeInOutBack,
   repositionAnimationDuration: Duration(milliseconds: 400),
@@ -245,7 +245,7 @@ The package includes custom `FigmaSpringCurve` animations (slow, gentle, quick, 
 ## Programmatic Control
 
 ```dart
-final controller = FocusedOverlayHolderController();
+final controller = SmartOverlayMenuController();
 
 // Open overlay
 controller.open();
@@ -253,7 +253,7 @@ controller.open();
 // Close overlay
 controller.close();
 
-FocusedOverlayHolder(
+SmartOverlayMenu(
   controller: controller,
   bottomWidget: MyCustomWidget(),
   child: Text('Controlled Widget'),
@@ -266,20 +266,20 @@ The component provides haptic feedback by default when opening the overlay. You 
 
 ```dart
 // Default usage (light impact)
-FocusedOverlayHolder(
+SmartOverlayMenu(
   child: Text('Default haptic'),
   bottomWidget: MyWidget(),
 )
 
 // Custom haptic
-FocusedOverlayHolder(
+SmartOverlayMenu(
   haptic: HapticFeedback.mediumImpact,
   child: Text('Medium haptic'),
   bottomWidget: MyWidget(),
 )
 
 // Disable haptic
-FocusedOverlayHolder(
+SmartOverlayMenu(
   haptic: null,
   child: Text('No haptic'),
   bottomWidget: MyWidget(),
@@ -288,37 +288,37 @@ FocusedOverlayHolder(
 
 ## Available Parameters
 
-| Parameter                      | Type                              | Description                              | Default                      |
-| ------------------------------ | --------------------------------- | ---------------------------------------- | ---------------------------- |
-| `child`                        | `Widget`                          | The main widget (required)               | -                            |
-| `topWidget`                    | `Widget?`                         | Widget to display above (optional)       | `null`                       |
-| `bottomWidget`                 | `Widget?`                         | Widget to display below (optional)       | `null`                       |
-| `topWidgetPadding`             | `EdgeInsets?`                     | Padding around top widget                | `null`                       |
-| `bottomWidgetPadding`          | `EdgeInsets?`                     | Padding around bottom widget             | `null`                       |
-| `topWidgetAlignment`           | `Alignment?`                      | Horizontal alignment of top widget       | `Alignment.centerLeft`       |
-| `bottomWidgetAlignment`        | `Alignment?`                      | Horizontal alignment of bottom widget    | `Alignment.centerLeft`       |
-| `pressFeedbackScale`           | `double?`                         | Scale factor for press feedback          | `0.9`                        |
-| `pressFeedbackDuration`        | `Duration?`                       | Duration of press feedback animation     | `200ms`                      |
-| `pressFeedbackReverseDuration` | `Duration?`                       | Duration of reverse animation in overlay | `300ms`                      |
-| `pressFeedbackReverseCurve`    | `Curve?`                          | Curve for reverse animation in overlay   | `Curves.easeInOut`           |
-| `openWithTap`                  | `bool`                            | Open with tap instead of long press      | `false`                      |
-| `repositionAnimationDuration`  | `Duration?`                       | Duration of repositioning animation      | `300ms`                      |
-| `repositionAnimationCurve`     | `Curve?`                          | Animation curve for repositioning        | `FigmaSpringCurve.slow`      |
-| `topWidgetAnimationCurve`      | `Curve?`                          | Animation curve for top widget           | `FigmaSpringCurve.bouncy`    |
-| `bottomWidgetAnimationCurve`   | `Curve?`                          | Animation curve for bottom widget        | `FigmaSpringCurve.bouncy`    |
-| `blurSize`                     | `double?`                         | Background blur intensity                | `null`                       |
-| `blurBackgroundColor`          | `Color?`                          | Blurred background color                 | `null`                       |
-| `haptic`                       | `VoidCallback?`                   | Haptic feedback on open                  | `HapticFeedback.lightImpact` |
-| `onOpened`                     | `VoidCallback?`                   | Callback when overlay opens              | `null`                       |
-| `onClosed`                     | `VoidCallback?`                   | Callback when overlay closes             | `null`                       |
-| `controller`                   | `FocusedOverlayHolderController?` | Controller for programmatic control      | `null`                       |
-| `screenPadding`                | `EdgeInsets?`                     | Screen padding for positioning           | `EdgeInsets.all(16.0)`       |
-| `scaleDownWhenTooLarge`        | `bool`                            | Auto-scale widget when too large         | `false`                      |
+| Parameter                      | Type                          | Description                              | Default                      |
+| ------------------------------ | ----------------------------- | ---------------------------------------- | ---------------------------- |
+| `child`                        | `Widget`                      | The main widget (required)               | -                            |
+| `topWidget`                    | `Widget?`                     | Widget to display above (optional)       | `null`                       |
+| `bottomWidget`                 | `Widget?`                     | Widget to display below (optional)       | `null`                       |
+| `topWidgetPadding`             | `EdgeInsets?`                 | Padding around top widget                | `null`                       |
+| `bottomWidgetPadding`          | `EdgeInsets?`                 | Padding around bottom widget             | `null`                       |
+| `topWidgetAlignment`           | `Alignment?`                  | Horizontal alignment of top widget       | `Alignment.centerLeft`       |
+| `bottomWidgetAlignment`        | `Alignment?`                  | Horizontal alignment of bottom widget    | `Alignment.centerLeft`       |
+| `pressFeedbackScale`           | `double?`                     | Scale factor for press feedback          | `0.9`                        |
+| `pressFeedbackDuration`        | `Duration?`                   | Duration of press feedback animation     | `200ms`                      |
+| `pressFeedbackReverseDuration` | `Duration?`                   | Duration of reverse animation in overlay | `300ms`                      |
+| `pressFeedbackReverseCurve`    | `Curve?`                      | Curve for reverse animation in overlay   | `Curves.easeInOut`           |
+| `openWithTap`                  | `bool`                        | Open with tap instead of long press      | `false`                      |
+| `repositionAnimationDuration`  | `Duration?`                   | Duration of repositioning animation      | `300ms`                      |
+| `repositionAnimationCurve`     | `Curve?`                      | Animation curve for repositioning        | `FigmaSpringCurve.slow`      |
+| `topWidgetAnimationCurve`      | `Curve?`                      | Animation curve for top widget           | `FigmaSpringCurve.bouncy`    |
+| `bottomWidgetAnimationCurve`   | `Curve?`                      | Animation curve for bottom widget        | `FigmaSpringCurve.bouncy`    |
+| `blurSize`                     | `double?`                     | Background blur intensity                | `null`                       |
+| `blurBackgroundColor`          | `Color?`                      | Blurred background color                 | `null`                       |
+| `haptic`                       | `VoidCallback?`               | Haptic feedback on open                  | `HapticFeedback.lightImpact` |
+| `onOpened`                     | `VoidCallback?`               | Callback when overlay opens              | `null`                       |
+| `onClosed`                     | `VoidCallback?`               | Callback when overlay closes             | `null`                       |
+| `controller`                   | `SmartOverlayMenuController?` | Controller for programmatic control      | `null`                       |
+| `screenPadding`                | `EdgeInsets?`                 | Screen padding for positioning           | `EdgeInsets.all(16.0)`       |
+| `scaleDownWhenTooLarge`        | `bool`                        | Auto-scale widget when too large         | `false`                      |
 
 ## Advanced Example
 
 ```dart
-FocusedOverlayHolder(
+SmartOverlayMenu(
   openWithTap: true,
   haptic: HapticFeedback.mediumImpact,
   repositionAnimationDuration: Duration(milliseconds: 500),

@@ -1,26 +1,26 @@
-# Focused Overlay Example
+# Smart Overlay Menu Example
 
-Cette application d'exemple démontre l'utilisation du composant `FocusedOverlayHolder`, un widget générique qui permet d'afficher des overlays personnalisés au-dessus et/ou en-dessous d'un widget principal.
+This example application demonstrates the use of the `SmartOverlayMenu` component, a generic widget that allows you to display custom overlays above and/or below a main widget.
 
-## Fonctionnalités démontrées
+## Demonstrated Features
 
-- **Widget au-dessus uniquement** : Affichage d'un widget au-dessus du widget principal
-- **Widget en-dessous uniquement** : Affichage d'un widget en-dessous du widget principal
-- **Widgets multiples** : Affichage simultané de widgets au-dessus et en-dessous
-- **Contrôle programmatique** : Ouverture de l'overlay via un contrôleur
-- **Repositionnement automatique** : Le widget principal se repositionne automatiquement si les overlays dépassent les bords de l'écran
+- **Above widget only**: Display a widget above the main widget
+- **Below widget only**: Display a widget below the main widget
+- **Multiple widgets**: Simultaneously display widgets above and below
+- **Programmatic control**: Open the overlay via a controller
+- **Automatic repositioning**: The main widget automatically repositions if overlays exceed the screen edges
 
-## Lancement de l'exemple
+## Running the Example
 
 ```bash
 cd example
 flutter run
 ```
 
-## Instructions d'utilisation
+## Usage Instructions
 
-- **Long press** sur les widgets colorés pour afficher les overlays
-- **Appuyez sur le bouton** "Ouvrir overlay programmatiquement" pour tester le contrôle via contrôleur
-- **Testez le repositionnement** en faisant un long press sur le widget orange en bas de l'écran
+- **Long press** on the colored widgets to display overlays
+- **Press the button** "Open overlay programmatically" to test controller-based control
+- **Test repositioning** by long pressing the orange widget at the bottom of the screen
 
-L'exemple montre comment le composant `FocusedOverlayHolder` peut remplacer l'ancien système de menus par des widgets totalement personnalisables.
+This example shows how the `SmartOverlayMenu` component can replace the old menu system with fully customizable widgets.
