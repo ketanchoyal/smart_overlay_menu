@@ -11,7 +11,7 @@ A Flutter package that provides a generic component for displaying custom overla
 
 Here's how the focused menu looks in action, as implemented in [Dragonfly](https://dfly.app), a native macOS/iOS client for Bluesky:
 
-![Focused Menu Demo in Dragonfly](assets/dragonfly-demo.gif)
+<img src="assets/smart_overlay_menu.gif" width="600" height="600">
 
 ## Features
 
@@ -288,32 +288,32 @@ FocusedOverlayHolder(
 
 ## Available Parameters
 
-| Parameter                     | Type                              | Description                           | Default                      |
-| ----------------------------- | --------------------------------- | ------------------------------------- | ---------------------------- |
-| `child`                       | `Widget`                          | The main widget (required)            | -                            |
-| `topWidget`                   | `Widget?`                         | Widget to display above (optional)    | `null`                       |
-| `bottomWidget`                | `Widget?`                         | Widget to display below (optional)    | `null`                       |
-| `topWidgetPadding`            | `EdgeInsets?`                     | Padding around top widget             | `null`                       |
-| `bottomWidgetPadding`         | `EdgeInsets?`                     | Padding around bottom widget          | `null`                       |
-| `topWidgetAlignment`          | `Alignment?`                      | Horizontal alignment of top widget    | `Alignment.centerLeft`       |
-| `bottomWidgetAlignment`       | `Alignment?`                      | Horizontal alignment of bottom widget | `Alignment.centerLeft`       |
-| `pressFeedbackScale`          | `double?`                         | Scale factor for press feedback       | `0.9`                        |
-| `pressFeedbackDuration`       | `Duration?`                       | Duration of press feedback animation  | `200ms`                      |
-| `pressFeedbackReverseDuration`| `Duration?`                       | Duration of reverse animation in overlay | `300ms`                   |
-| `pressFeedbackReverseCurve`   | `Curve?`                          | Curve for reverse animation in overlay | `Curves.easeInOut`           |
-| `openWithTap`                 | `bool`                            | Open with tap instead of long press   | `false`                      |
-| `repositionAnimationDuration` | `Duration?`                       | Duration of repositioning animation   | `300ms`                      |
-| `repositionAnimationCurve`    | `Curve?`                          | Animation curve for repositioning     | `FigmaSpringCurve.slow`      |
-| `topWidgetAnimationCurve`     | `Curve?`                          | Animation curve for top widget        | `FigmaSpringCurve.bouncy`    |
-| `bottomWidgetAnimationCurve`  | `Curve?`                          | Animation curve for bottom widget     | `FigmaSpringCurve.bouncy`    |
-| `blurSize`                    | `double?`                         | Background blur intensity             | `null`                       |
-| `blurBackgroundColor`         | `Color?`                          | Blurred background color              | `null`                       |
-| `haptic`                      | `VoidCallback?`                   | Haptic feedback on open               | `HapticFeedback.lightImpact` |
-| `onOpened`                    | `VoidCallback?`                   | Callback when overlay opens           | `null`                       |
-| `onClosed`                    | `VoidCallback?`                   | Callback when overlay closes          | `null`                       |
-| `controller`                  | `FocusedOverlayHolderController?` | Controller for programmatic control   | `null`                       |
-| `screenPadding`               | `EdgeInsets?`                     | Screen padding for positioning        | `EdgeInsets.all(16.0)`       |
-| `scaleDownWhenTooLarge`       | `bool`                            | Auto-scale widget when too large      | `false`                      |
+| Parameter                      | Type                              | Description                              | Default                      |
+| ------------------------------ | --------------------------------- | ---------------------------------------- | ---------------------------- |
+| `child`                        | `Widget`                          | The main widget (required)               | -                            |
+| `topWidget`                    | `Widget?`                         | Widget to display above (optional)       | `null`                       |
+| `bottomWidget`                 | `Widget?`                         | Widget to display below (optional)       | `null`                       |
+| `topWidgetPadding`             | `EdgeInsets?`                     | Padding around top widget                | `null`                       |
+| `bottomWidgetPadding`          | `EdgeInsets?`                     | Padding around bottom widget             | `null`                       |
+| `topWidgetAlignment`           | `Alignment?`                      | Horizontal alignment of top widget       | `Alignment.centerLeft`       |
+| `bottomWidgetAlignment`        | `Alignment?`                      | Horizontal alignment of bottom widget    | `Alignment.centerLeft`       |
+| `pressFeedbackScale`           | `double?`                         | Scale factor for press feedback          | `0.9`                        |
+| `pressFeedbackDuration`        | `Duration?`                       | Duration of press feedback animation     | `200ms`                      |
+| `pressFeedbackReverseDuration` | `Duration?`                       | Duration of reverse animation in overlay | `300ms`                      |
+| `pressFeedbackReverseCurve`    | `Curve?`                          | Curve for reverse animation in overlay   | `Curves.easeInOut`           |
+| `openWithTap`                  | `bool`                            | Open with tap instead of long press      | `false`                      |
+| `repositionAnimationDuration`  | `Duration?`                       | Duration of repositioning animation      | `300ms`                      |
+| `repositionAnimationCurve`     | `Curve?`                          | Animation curve for repositioning        | `FigmaSpringCurve.slow`      |
+| `topWidgetAnimationCurve`      | `Curve?`                          | Animation curve for top widget           | `FigmaSpringCurve.bouncy`    |
+| `bottomWidgetAnimationCurve`   | `Curve?`                          | Animation curve for bottom widget        | `FigmaSpringCurve.bouncy`    |
+| `blurSize`                     | `double?`                         | Background blur intensity                | `null`                       |
+| `blurBackgroundColor`          | `Color?`                          | Blurred background color                 | `null`                       |
+| `haptic`                       | `VoidCallback?`                   | Haptic feedback on open                  | `HapticFeedback.lightImpact` |
+| `onOpened`                     | `VoidCallback?`                   | Callback when overlay opens              | `null`                       |
+| `onClosed`                     | `VoidCallback?`                   | Callback when overlay closes             | `null`                       |
+| `controller`                   | `FocusedOverlayHolderController?` | Controller for programmatic control      | `null`                       |
+| `screenPadding`                | `EdgeInsets?`                     | Screen padding for positioning           | `EdgeInsets.all(16.0)`       |
+| `scaleDownWhenTooLarge`        | `bool`                            | Auto-scale widget when too large         | `false`                      |
 
 ## Advanced Example
 
