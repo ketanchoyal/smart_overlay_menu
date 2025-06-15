@@ -2,7 +2,7 @@ name: smart_overlay_menu
 description: >
   A professional Flutter package providing customizable overlay menus with haptic feedback,
   automatic positioning, smooth animations, and programmatic control. Perfect for context menus and action overlays.
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/sgruhier/smart_overlay_menu
 repository: https://github.com/sgruhier/smart_overlay_menu
 issue_tracker: https://github.com/sgruhier/smart_overlay_menu/issues

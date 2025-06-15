@@ -11,7 +11,7 @@ A Flutter package that provides a generic component for displaying custom overla
 
 Here's how the focused menu looks in action, as implemented in [Dragonfly](https://dfly.app), a native macOS/iOS client for Bluesky:
 
-<img src="assets/smart_overlay_menu.gif" width="600" height="600">
+<img src="https://raw.githubusercontent.com/sgruhier/smart_overlay_menu/refs/heads/main/assets/smart_overlay_menu.gif" width="600" height="600">
 
 ## Features
 
