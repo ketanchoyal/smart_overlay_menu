@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:smart_overlay_menu/src/utils/constants.dart';
 import 'package:smart_overlay_menu/src/utils/positioning_calculator.dart';
 import 'package:smart_overlay_menu/src/widgets/figma_curve.dart';
 import 'package:smart_overlay_menu/src/widgets/overlay_dimension_manager.dart';
