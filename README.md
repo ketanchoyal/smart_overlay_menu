@@ -288,32 +288,80 @@ SmartOverlayMenu(
 
 ## Available Parameters
 
-| Parameter                      | Type                          | Description                              | Default                      |
-| ------------------------------ | ----------------------------- | ---------------------------------------- | ---------------------------- |
-| `child`                        | `Widget`                      | The main widget (required)               | -                            |
-| `topWidget`                    | `Widget?`                     | Widget to display above (optional)       | `null`                       |
-| `bottomWidget`                 | `Widget?`                     | Widget to display below (optional)       | `null`                       |
-| `topWidgetPadding`             | `EdgeInsets?`                 | Padding around top widget                | `null`                       |
-| `bottomWidgetPadding`          | `EdgeInsets?`                 | Padding around bottom widget             | `null`                       |
-| `topWidgetAlignment`           | `Alignment?`                  | Horizontal alignment of top widget       | `Alignment.centerLeft`       |
-| `bottomWidgetAlignment`        | `Alignment?`                  | Horizontal alignment of bottom widget    | `Alignment.centerLeft`       |
-| `pressFeedbackScale`           | `double?`                     | Scale factor for press feedback          | `0.9`                        |
-| `pressFeedbackDuration`        | `Duration?`                   | Duration of press feedback animation     | `200ms`                      |
-| `pressFeedbackReverseDuration` | `Duration?`                   | Duration of reverse animation in overlay | `300ms`                      |
-| `pressFeedbackReverseCurve`    | `Curve?`                      | Curve for reverse animation in overlay   | `Curves.easeInOut`           |
-| `openWithTap`                  | `bool`                        | Open with tap instead of long press      | `false`                      |
-| `repositionAnimationDuration`  | `Duration?`                   | Duration of repositioning animation      | `300ms`                      |
-| `repositionAnimationCurve`     | `Curve?`                      | Animation curve for repositioning        | `FigmaSpringCurve.slow`      |
-| `topWidgetAnimationCurve`      | `Curve?`                      | Animation curve for top widget           | `FigmaSpringCurve.bouncy`    |
-| `bottomWidgetAnimationCurve`   | `Curve?`                      | Animation curve for bottom widget        | `FigmaSpringCurve.bouncy`    |
-| `blurSize`                     | `double?`                     | Background blur intensity                | `null`                       |
-| `blurBackgroundColor`          | `Color?`                      | Blurred background color                 | `null`                       |
-| `haptic`                       | `VoidCallback?`               | Haptic feedback on open                  | `HapticFeedback.lightImpact` |
-| `onOpened`                     | `VoidCallback?`               | Callback when overlay opens              | `null`                       |
-| `onClosed`                     | `VoidCallback?`               | Callback when overlay closes             | `null`                       |
-| `controller`                   | `SmartOverlayMenuController?` | Controller for programmatic control      | `null`                       |
-| `screenPadding`                | `EdgeInsets?`                 | Screen padding for positioning           | `EdgeInsets.all(16.0)`       |
-| `scaleDownWhenTooLarge`        | `bool`                        | Auto-scale widget when too large         | `false`                      |
+| Parameter                      | Type                          | Description                                     | Default                      |
+| ------------------------------ | ----------------------------- | ----------------------------------------------- | ---------------------------- |
+| `child`                        | `Widget`                      | The main widget (required)                      | -                            |
+| `topWidget`                    | `Widget?`                     | Widget to display above (optional)              | `null`                       |
+| `bottomWidget`                 | `Widget?`                     | Widget to display below (optional)              | `null`                       |
+| `topWidgetPadding`             | `EdgeInsets?`                 | Padding around top widget                       | `null`                       |
+| `bottomWidgetPadding`          | `EdgeInsets?`                 | Padding around bottom widget                    | `null`                       |
+| `topWidgetAlignment`           | `Alignment?`                  | Horizontal alignment of top widget              | `Alignment.centerLeft`       |
+| `bottomWidgetAlignment`        | `Alignment?`                  | Horizontal alignment of bottom widget           | `Alignment.centerLeft`       |
+| `pressFeedbackScale`           | `double?`                     | Scale factor for press feedback                 | `0.9`                        |
+| `pressFeedbackDuration`        | `Duration?`                   | Duration of press feedback animation            | `200ms`                      |
+| `pressFeedbackReverseDuration` | `Duration?`                   | Duration of reverse animation in overlay        | `300ms`                      |
+| `pressFeedbackReverseCurve`    | `Curve?`                      | Curve for reverse animation in overlay          | `Curves.easeInOut`           |
+| `openWithTap`                  | `bool`                        | Open with tap instead of long press             | `false`                      |
+| `repositionAnimationDuration`  | `Duration?`                   | Duration of repositioning animation             | `300ms`                      |
+| `repositionAnimationCurve`     | `Curve?`                      | Animation curve for repositioning               | `FigmaSpringCurve.slow`      |
+| `topWidgetAnimationCurve`      | `Curve?`                      | Animation curve for top widget                  | `FigmaSpringCurve.bouncy`    |
+| `bottomWidgetAnimationCurve`   | `Curve?`                      | Animation curve for bottom widget               | `FigmaSpringCurve.bouncy`    |
+| `blurSize`                     | `double?`                     | Background blur intensity                       | `null`                       |
+| `blurBackgroundColor`          | `Color?`                      | Blurred background color                        | `null`                       |
+| `haptic`                       | `VoidCallback?`               | Haptic feedback on open                         | `HapticFeedback.lightImpact` |
+| `onOpened`                     | `VoidCallback?`               | Callback when overlay opens                     | `null`                       |
+| `onClosed`                     | `VoidCallback?`               | Callback when overlay closes                    | `null`                       |
+| `controller`                   | `SmartOverlayMenuController?` | Controller for programmatic control             | `null`                       |
+| `screenPadding`                | `EdgeInsets?`                 | Screen padding for positioning                  | `EdgeInsets.all(16.0)`       |
+| `scaleDownWhenTooLarge`        | `bool`                        | Auto-scale widget when too large                | `false`                      |
+| `overlayPadding`               | `EdgeInsets?`                 | Padding around the overlay (top, child, bottom) | `null`                       |
+| `overlayBuilder`               | `OverlayBuilder?`             | Custom builder for the overlay container        | `null`                       |
+
+## Overlay Padding
+
+You can add extra padding around the entire overlay (top widget, child, and bottom widget) using `overlayPadding`:
+
+```dart
+SmartOverlayMenu(
+  overlayPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+  topWidget: Text('Top'),
+  bottomWidget: Text('Bottom'),
+  child: Text('Long press me!'),
+)
+```
+
+This is useful for ensuring the overlay doesn't touch the screen edges or to add extra spacing around the overlay content.
+
+## Custom Overlay Builder
+
+For advanced customization, use `overlayBuilder` to wrap the overlay (including blur, top, child, and bottom widgets) in your own widget tree. This allows you to add custom backgrounds, borders, shadows, or any decoration:
+
+```dart
+SmartOverlayMenu(
+  overlayBuilder: (context, overlay) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.95),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 16,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: overlay, // The default overlay content
+    );
+  },
+  topWidget: Text('Top'),
+  bottomWidget: Text('Bottom'),
+  child: Text('Long press me!'),
+)
+```
+
+- The `overlayBuilder` receives the context and the default overlay widget (which includes blur, top, child, and bottom widgets) and should return a new widget wrapping the overlay.
+- This is ideal for adding custom backgrounds, rounded corners, or other effects to the overlay as a whole.
 
 ## Advanced Example
 

@@ -142,38 +142,45 @@ class SmartOverlayMenu extends StatefulWidget {
   /// Defaults to false to maintain backward compatibility.
   final bool scaleDownWhenTooLarge;
 
+  /// Builder function to create the overlay widget.
+  final Widget Function(Widget child)? overlayBuilder;
+
+  /// Padding around the overlay widget.
+  final EdgeInsets overlayPadding;
+
   /// Creates a [SmartOverlayMenu].
   ///
   /// The [child] parameter is required and represents the main widget that
   /// will trigger the overlay when long pressed or tapped.
-  const SmartOverlayMenu({
-    super.key,
-    required this.child,
-    this.topWidget,
-    this.bottomWidget,
-    this.topWidgetPadding,
-    this.bottomWidgetPadding,
-    this.onPressed,
-    this.duration,
-    this.blurSize = SmartOverlayConstants.defaultBlurSize,
-    this.blurBackgroundColor,
-    this.openWithTap = false,
-    this.controller,
-    this.onOpened,
-    this.onClosed,
-    this.repositionAnimationDuration,
-    this.repositionAnimationCurve,
-    this.screenPadding,
-    this.haptic = HapticFeedback.lightImpact,
-    this.disabled = false,
-    this.topWidgetAlignment,
-    this.bottomWidgetAlignment,
-    this.pressFeedbackDuration,
-    this.pressFeedbackReverseDuration,
-    this.pressFeedbackScale,
-    this.pressFeedbackReverseCurve,
-    this.scaleDownWhenTooLarge = false,
-  });
+  const SmartOverlayMenu(
+      {super.key,
+      required this.child,
+      this.topWidget,
+      this.bottomWidget,
+      this.topWidgetPadding,
+      this.bottomWidgetPadding,
+      this.onPressed,
+      this.duration,
+      this.blurSize = SmartOverlayConstants.defaultBlurSize,
+      this.blurBackgroundColor,
+      this.openWithTap = false,
+      this.controller,
+      this.onOpened,
+      this.onClosed,
+      this.repositionAnimationDuration,
+      this.repositionAnimationCurve,
+      this.screenPadding,
+      this.haptic = HapticFeedback.lightImpact,
+      this.disabled = false,
+      this.topWidgetAlignment,
+      this.bottomWidgetAlignment,
+      this.pressFeedbackDuration,
+      this.pressFeedbackReverseDuration,
+      this.pressFeedbackScale,
+      this.pressFeedbackReverseCurve,
+      this.scaleDownWhenTooLarge = false,
+      this.overlayBuilder,
+      this.overlayPadding = EdgeInsets.zero});
 
   /// Creates configuration objects from widget parameters.
   PressFeedbackConfig get _pressFeedbackConfig => PressFeedbackConfig(
@@ -242,12 +249,14 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
     }
   }
 
-  void _getOffset() {
+  void _getSizeAndOffset() {
     final renderBox = _containerKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
 
-    final size = renderBox.size;
     final offset = renderBox.localToGlobal(Offset.zero);
+    final paddingSize = Offset(widget.overlayPadding.left + widget.overlayPadding.right,
+        widget.overlayPadding.top + widget.overlayPadding.bottom);
+    final size = renderBox.size + paddingSize;
 
     setState(() {
       _childOffset = offset;
@@ -303,7 +312,7 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
   }
 
   Future<void> openOverlay(BuildContext context) async {
-    _getOffset();
+    _getSizeAndOffset();
     _triggerHapticFeedback();
     widget.onOpened?.call();
 
@@ -315,12 +324,10 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
   }
 
   Future<void> _navigateToOverlay(BuildContext context) async {
-    await Navigator.of(context, rootNavigator: true)
-        .push(_createOverlayRoute())
-        .whenComplete(() {
-          widget.onClosed?.call();
-          _resetAnimation();
-        });
+    await Navigator.of(context, rootNavigator: true).push(_createOverlayRoute()).whenComplete(() {
+      widget.onClosed?.call();
+      _resetAnimation();
+    });
   }
 
   PageRouteBuilder _createOverlayRoute() {
@@ -336,8 +343,9 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
   }
 
   Widget _buildOverlayPage(Animation<double> animation) {
+    final child = widget.overlayBuilder?.call(widget.child) ?? widget.child;
     return SmartOverlayDetails(
-      child: widget.child,
+      child: child,
       childOffset: _childOffset,
       childSize: _childSize,
       topWidget: widget.topWidget,
