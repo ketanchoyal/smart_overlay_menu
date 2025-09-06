@@ -1,4 +1,7 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:smart_overlay_menu/src/models/overlay_config.dart';
 import 'package:smart_overlay_menu/src/utils/constants.dart';
@@ -145,6 +148,8 @@ class SmartOverlayMenu extends StatefulWidget {
   /// Builder function to create the overlay widget.
   final Widget Function(Widget child)? overlayBuilder;
 
+  final bool passImageToOverlay;
+
   /// Padding around the overlay widget.
   final EdgeInsets overlayPadding;
 
@@ -180,6 +185,7 @@ class SmartOverlayMenu extends StatefulWidget {
       this.pressFeedbackReverseCurve,
       this.scaleDownWhenTooLarge = false,
       this.overlayBuilder,
+      this.passImageToOverlay = false,
       this.overlayPadding = EdgeInsets.zero});
 
   /// Creates configuration objects from widget parameters.
@@ -203,12 +209,14 @@ class SmartOverlayMenu extends StatefulWidget {
 }
 
 class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProviderStateMixin {
-  final GlobalKey _containerKey = GlobalKey();
+  final GlobalKey _repaintBoundaryKey = GlobalKey();
   late final SmartOverlayMenuController _controller;
   late final PressFeedbackAnimationController _animationController;
 
   Offset _childOffset = Offset.zero;
   Size? _childSize;
+
+  Uint8List? _capturedImage;
 
   _SmartOverlayMenuState(SmartOverlayMenuController? controller) {
     _controller = controller ?? SmartOverlayMenuController();
@@ -219,6 +227,16 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
   void initState() {
     super.initState();
     _initializeAnimationController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _capturePng().then((image) {
+      setState(() {
+        _capturedImage = image;
+      });
+    });
   }
 
   void _resetAnimation() {
@@ -250,7 +268,8 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
   }
 
   void _getSizeAndOffset() {
-    final renderBox = _containerKey.currentContext?.findRenderObject() as RenderBox?;
+    final renderBox =
+        _repaintBoundaryKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
 
     final offset = renderBox.localToGlobal(Offset.zero);
@@ -273,16 +292,16 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      key: _containerKey,
-      child: OverlayGestureHandler(
-        config: widget._gestureConfig,
-        onTap: _handleTapGesture,
-        onLongPressStart: _handleLongPressStart,
-        onLongPressEnd: _handleLongPressEnd,
-        onLongPressCancel: _handleLongPressCancel,
-        child: PressFeedbackAnimationWidget(
-          animation: _animationController.animation,
+    return OverlayGestureHandler(
+      config: widget._gestureConfig,
+      onTap: _handleTapGesture,
+      onLongPressStart: _handleLongPressStart,
+      onLongPressEnd: _handleLongPressEnd,
+      onLongPressCancel: _handleLongPressCancel,
+      child: PressFeedbackAnimationWidget(
+        animation: _animationController.animation,
+        child: RepaintBoundary(
+          key: _repaintBoundaryKey,
           child: widget.child,
         ),
       ),
@@ -342,8 +361,46 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
     );
   }
 
+  //get image of the child and pass it to overlay this will solve the issue where Provider or InheritedWidget is not accessible in overlay
+  Future<Uint8List?> _capturePng() async {
+    try {
+      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+      ui.Image image =
+          await boundary.toImage(pixelRatio: 10); // Adjust pixelRatio as needed
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      return byteData?.buffer.asUint8List();
+    } catch (e) {
+      print('Error capturing widget: $e');
+      return null;
+    }
+  }
+
   Widget _buildOverlayPage(Animation<double> animation) {
-    final child = widget.overlayBuilder?.call(widget.child) ?? widget.child;
+    Widget child;
+    if (widget.passImageToOverlay) {
+      if (_capturedImage != null) {
+        child = Image.memory(_capturedImage!);
+      } else {
+        child = FutureBuilder(
+          future: _capturePng(),
+          initialData: null,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              _capturedImage = snapshot.data;
+              return Image.memory(snapshot.data!);
+            }
+          },
+        );
+      }
+    } else {
+      child = widget.overlayBuilder?.call(widget.child) ?? widget.child;
+    }
     return SmartOverlayDetails(
       child: child,
       childOffset: _childOffset,
