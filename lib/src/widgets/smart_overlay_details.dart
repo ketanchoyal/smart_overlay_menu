@@ -356,7 +356,7 @@ class _SmartOverlayDetailsState extends State<SmartOverlayDetails> with TickerPr
 
   void _applyRepositioning(RepositionData repositionData) {
     final newY = widget.childOffset.dy + repositionData.topOffset;
-    final newX = widget.childOffset.dx + repositionData.leftOffset;
+    final newX = widget.childOffset.dx;
 
     setState(() {
       _adjustedChildY = newY;
