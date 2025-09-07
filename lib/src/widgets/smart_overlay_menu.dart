@@ -209,6 +209,7 @@ class SmartOverlayMenu extends StatefulWidget {
 }
 
 class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProviderStateMixin {
+  final GlobalKey _containerKey = GlobalKey();
   final GlobalKey _repaintBoundaryKey = GlobalKey();
   late final SmartOverlayMenuController _controller;
   late final PressFeedbackAnimationController _animationController;
@@ -217,6 +218,8 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
   Size? _childSize;
 
   Uint8List? _capturedImage;
+
+  bool _isOverlayOpen = false;
 
   _SmartOverlayMenuState(SmartOverlayMenuController? controller) {
     _controller = controller ?? SmartOverlayMenuController();
@@ -269,7 +272,7 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
 
   void _getSizeAndOffset() {
     final renderBox =
-        _repaintBoundaryKey.currentContext?.findRenderObject() as RenderBox?;
+        _containerKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
 
     final offset = renderBox.localToGlobal(Offset.zero);
@@ -292,17 +295,23 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return OverlayGestureHandler(
-      config: widget._gestureConfig,
-      onTap: _handleTapGesture,
-      onLongPressStart: _handleLongPressStart,
-      onLongPressEnd: _handleLongPressEnd,
-      onLongPressCancel: _handleLongPressCancel,
-      child: PressFeedbackAnimationWidget(
-        animation: _animationController.animation,
-        child: RepaintBoundary(
-          key: _repaintBoundaryKey,
-          child: widget.child,
+    return Container(
+      key: _containerKey,
+      child: OverlayGestureHandler(
+        config: widget._gestureConfig,
+        onTap: _handleTapGesture,
+        onLongPressStart: _handleLongPressStart,
+        onLongPressEnd: _handleLongPressEnd,
+        onLongPressCancel: _handleLongPressCancel,
+        child: PressFeedbackAnimationWidget(
+          animation: _animationController.animation,
+          child: Visibility.maintain(
+            visible: !_isOverlayOpen,
+            child: RepaintBoundary(
+              key: _repaintBoundaryKey,
+              child: widget.child,
+            ),
+          ),
         ),
       ),
     );
@@ -334,6 +343,7 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
     _getSizeAndOffset();
     _triggerHapticFeedback();
     widget.onOpened?.call();
+    _isOverlayOpen = true;
 
     await _navigateToOverlay(context);
   }
@@ -345,6 +355,9 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
   Future<void> _navigateToOverlay(BuildContext context) async {
     await Navigator.of(context, rootNavigator: true).push(_createOverlayRoute()).whenComplete(() {
       widget.onClosed?.call();
+      setState(() {
+      _isOverlayOpen = false;
+      });
       _resetAnimation();
     });
   }
