@@ -235,10 +235,11 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _capturePng().then((image) {
-      setState(() {
-        _capturedImage = image;
-      });
+    //Post frame callback to save image after first build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.passImageToOverlay) {
+        _capturePng();
+      }
     });
   }
 
@@ -380,10 +381,12 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
       RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
           .findRenderObject() as RenderRepaintBoundary;
       ui.Image image =
-          await boundary.toImage(pixelRatio: 10); // Adjust pixelRatio as needed
+          await boundary.toImage(pixelRatio: 3); // Adjust pixelRatio as needed
       ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
-      return byteData?.buffer.asUint8List();
+      final capturedImage = byteData?.buffer.asUint8List();
+      _capturedImage = capturedImage;
+      return capturedImage;
     } catch (e) {
       print('Error capturing widget: $e');
       return null;
