@@ -555,12 +555,25 @@ class _SmartOverlayDetailsState extends State<SmartOverlayDetails> with TickerPr
       }
     }
 
+    // Handle keyboard visibility
+    final possibleTextFieldHeight = 80;
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final bottomSafeArea = MediaQuery.of(context).padding.bottom;
+    final effectiveKeyboardHeightWithTextField = keyboardHeight > 0 ? keyboardHeight + bottomSafeArea + possibleTextFieldHeight : 0.0;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    final effectiveChildSize =
+        widget.scaleDownWhenTooLarge && _scaledChildSize != null ? _scaledChildSize! : widget.childSize ?? Size.zero;
+
+
     // Original positioning logic for non-scaled widgets
-    final currentY = _needsRepositioning
+    final currentY = (_needsRepositioning
         ? _isClosing
             ? _adjustedChildY + (widget.childOffset.dy - _adjustedChildY) * (1 - _repositionAnimation.value)
             : widget.childOffset.dy + (_adjustedChildY - widget.childOffset.dy) * _repositionAnimation.value
-        : widget.childOffset.dy;
+        : widget.childOffset.dy);
+
+    final currentYWithKeyboard = effectiveKeyboardHeightWithTextField > 0 ? screenHeight - effectiveKeyboardHeightWithTextField - effectiveChildSize.height : currentY;
 
     final currentX = _needsRepositioning
         ? _isClosing
@@ -568,7 +581,8 @@ class _SmartOverlayDetailsState extends State<SmartOverlayDetails> with TickerPr
             : widget.childOffset.dx + (_adjustedChildX - widget.childOffset.dx) * _repositionAnimation.value
         : widget.childOffset.dx;
 
-    return Offset(currentX, currentY);
+
+    return Offset(currentX, currentYWithKeyboard);
   }
 
   ({double top, double left}) _calculateTopWidgetPosition(Offset currentChildPosition) {
