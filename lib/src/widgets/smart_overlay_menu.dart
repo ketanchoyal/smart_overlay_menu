@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:smart_overlay_menu/src/models/overlay_config.dart';
@@ -388,7 +389,7 @@ class _SmartOverlayMenuState extends State<SmartOverlayMenu> with TickerProvider
       _capturedImage = capturedImage;
       return capturedImage;
     } catch (e) {
-      print('Error capturing widget: $e');
+      debugPrint('Error capturing widget: $e');
       return null;
     }
   }
